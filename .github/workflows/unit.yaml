@@ -40,22 +40,22 @@ jobs:
       id: get_release
       uses: actions/github-script@v6
       with:
-      script: |
-        const { data } = await github.repos.getLatestRelease({
-          owner: 'Azure',
-          repo: 'gocover'
-        });
-        console.log(`Latest tag is ${data.tag_name}`);
-        return data;
+        script: |
+          const { data } = await github.repos.getLatestRelease({
+            owner: 'Azure',
+            repo: 'gocover'
+          });
+          console.log(`Latest tag is ${data.tag_name}`);
+          return data;
     - name: Download gocover latest release assets
       uses: actions/github-script@v6
       with:
-      script: |
-        const release = context.payload.outputs.get_release;
-        for (const asset of release.assets) {
-          const response = await fetch(asset.browser_download_url);
-          await fs.promises.writeFile(asset.name, await response.buffer());
-        }
+        script: |
+          const release = context.payload.outputs.get_release;
+          for (const asset of release.assets) {
+            const response = await fetch(asset.browser_download_url);
+            await fs.promises.writeFile(asset.name, await response.buffer());
+          }
     - name: Run gocover
       shell: bash
       run: |
