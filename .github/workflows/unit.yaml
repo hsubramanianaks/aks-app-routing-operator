@@ -1,13 +1,6 @@
 name: Unit Tests
 
-on:
-  workflow_call:
-    inputs:
-      ref:
-        type: string
-      skipRefCheck:
-        type: boolean
-        default: true
+on: [workflow_dispatch]
 
 jobs:
   unit-test:
