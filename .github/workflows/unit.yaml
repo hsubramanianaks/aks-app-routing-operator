@@ -39,6 +39,13 @@ jobs:
     needs: unit-test
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ inputs.ref }}
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: ~1.20.0
     - name: Get gocover latest release asset url
       depends-on: Run Unit Tests
       id: get_release
@@ -61,7 +68,10 @@ jobs:
         wget -q -O gocover.tar.gz ${{ steps.get_release.outputs.result }}
         tar -xzf gocover.tar.gz
         chmod +x gocover
-        ./gocover full --cover-profile=coverage.out  --repository-path=./ --report-name=aks-app-routing-operator.report --outputdir=/tmp
+        echo $(pwd)
+        echo $(git branch)
+        echo $(git fetch --all)
+        ./gocover diff --cover-profile=coverage.out  --repository-path=./ --report-name=aks-app-routing-operator.report --outputdir=/tmp --compare-branch=origin/main  --coverage-baseline=80
     - name: Upload coverage report
       uses: actions/upload-artifact@v3
       with:
